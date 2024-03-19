@@ -1,0 +1,56 @@
+#include <algorithm>
+#include "bmp.h"
+
+BMP load_bmp_image(const std::string& filename) {
+    BMP bmp;
+    std::ifstream file(filename, std::ios::binary);
+
+    if (!file.is_open()) {
+        throw std::runtime_error("Failed to open file");
+    }
+
+    // Read file header
+    file.read(reinterpret_cast<char*>(&bmp.header), sizeof(tagBITMAPFILEHEADER));
+
+    file.read(reinterpret_cast<char*>(&bmp.map), sizeof(tagBITMAPINFOHEADER));
+    if (bmp.header.bf_type != 0x4D42) {
+        throw std::runtime_error("File is not a BMP");
+    }
+
+    // Calculate padding
+    int padding = (4 - (bmp.map.bi_width * (bmp.map.bi_bit_count / 8)) % 4) % 4;
+
+    // Calculate image size
+    size_t imageSize = (bmp.map.bi_width * (bmp.map.bi_bit_count / 8) + padding) * bmp.map.bi_height;
+
+    // Resize data vector and read pixel data
+    bmp.data.resize(imageSize);
+
+    file.read(reinterpret_cast<char*>(bmp.data.data()), imageSize);
+
+    return bmp;
+}
+
+void save_bmp_image(const BMP& bmp, const std::string& filename) {
+    std::ofstream file(filename, std::ios::binary);
+
+    if (!file.is_open()) {
+        throw std::runtime_error("Failed to create file");
+    }
+
+    // Write file header
+    file.write(reinterpret_cast<const char*>(&bmp.header), sizeof(tagBITMAPFILEHEADER));
+
+    // Write bitmap info header
+    file.write(reinterpret_cast<const char*>(&bmp.map), sizeof(tagBITMAPINFOHEADER));
+
+    uint32_t offset = (bmp.header.bf_off_bits - sizeof(tagBITMAPFILEHEADER) - sizeof(tagBITMAPINFOHEADER));
+
+    // Write padding bytes for offset
+    for (uint32_t i = 0; i < offset; ++i) {
+        file.write(reinterpret_cast<const char*>(sizeof(uint8_t)));
+    }
+
+    file.write(reinterpret_cast<const char*>(bmp.data.data()), bmp.data.size());
+    file.close();
+}

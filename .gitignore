@@ -1,0 +1,9 @@
+*.png
+
+cmake-build-debug
+build
+
+*.exe
+
+.vscode
+.idea
