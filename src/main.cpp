@@ -86,7 +86,6 @@ void task4b(const std::string& imagePath) {
 
 void task5(const std::string& imagePath) {
     std::string YCbCr_path = imagePath.substr(0, imagePath.size() - 4) + ".ycbcr.bmp";
-
     BMP bmp_image = load_bmp_image(imagePath);
     BMPProcess bmp_process = BMPProcess(bmp_image);
 

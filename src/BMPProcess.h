@@ -24,6 +24,10 @@ public:
     double correlation(const std::vector<uint8_t> &a, const std::vector<uint8_t> &b);
     double autocorrelation(const std::vector<uint8_t>& src, int x, int y);
 
+
+    double expected_payoff(char channel);
+    double quadr_err(char channel);
+
     BMP RGB24_to_YCbCr();
     BMP YCbCr_to_RGB24();
     BMP get_Y_channel();
