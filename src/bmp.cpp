@@ -1,56 +1,71 @@
-#include <algorithm>
 #include "bmp.h"
 
 BMP load_bmp_image(const std::string& filename) {
     BMP bmp;
     std::ifstream file(filename, std::ios::binary);
-
-    if (!file.is_open()) {
-        throw std::runtime_error("Failed to open file");
+    if (!file) {
+        std::cerr << "Error: Unable to open file for reading: " << filename << std::endl;
+        exit(1);
     }
 
-    // Read file header
     file.read(reinterpret_cast<char*>(&bmp.header), sizeof(tagBITMAPFILEHEADER));
-
     file.read(reinterpret_cast<char*>(&bmp.map), sizeof(tagBITMAPINFOHEADER));
-    if (bmp.header.bf_type != 0x4D42) {
-        throw std::runtime_error("File is not a BMP");
+
+    if (bmp.map.bi_bit_count != 24) {
+        std::cerr << "Image is not True Color 24 BMP!";
+        exit(-1);
     }
 
-    // Calculate padding
-    int padding = (4 - (bmp.map.bi_width * (bmp.map.bi_bit_count / 8)) % 4) % 4;
+    // Calculate image data size
+    size_t dataSize = bmp.map.bi_size_image;
 
-    // Calculate image size
-    size_t imageSize = (bmp.map.bi_width * (bmp.map.bi_bit_count / 8) + padding) * bmp.map.bi_height;
+    // Read image data directly into the vector
+    bmp.data.resize(dataSize); // Размер вектора устанавливается в соответствии с количеством пикселей
+    file.read(reinterpret_cast<char*>(bmp.data.data()), dataSize);
 
-    // Resize data vector and read pixel data
-    bmp.data.resize(imageSize);
-
-    file.read(reinterpret_cast<char*>(bmp.data.data()), imageSize);
-
+    file.close();
     return bmp;
 }
 
+
 void save_bmp_image(const BMP& bmp, const std::string& filename) {
     std::ofstream file(filename, std::ios::binary);
-
-    if (!file.is_open()) {
-        throw std::runtime_error("Failed to create file");
+    if (!file) {
+        std::cerr << "Error: Unable to open file for writing: " << filename << std::endl;
+        exit(1);
     }
 
-    // Write file header
     file.write(reinterpret_cast<const char*>(&bmp.header), sizeof(tagBITMAPFILEHEADER));
-
-    // Write bitmap info header
     file.write(reinterpret_cast<const char*>(&bmp.map), sizeof(tagBITMAPINFOHEADER));
 
-    uint32_t offset = (bmp.header.bf_off_bits - sizeof(tagBITMAPFILEHEADER) - sizeof(tagBITMAPINFOHEADER));
-
-    // Write padding bytes for offset
-    for (uint32_t i = 0; i < offset; ++i) {
-        file.write(reinterpret_cast<const char*>(sizeof(uint8_t)));
-    }
-
+    // Write image data
     file.write(reinterpret_cast<const char*>(bmp.data.data()), bmp.data.size());
+
     file.close();
+}
+
+
+void print_image_header(const BMP& bmp)
+{
+    std::cout
+        << "FILE: " << std::endl
+        << "bf_type: " << bmp.header.bf_type << "," << std::endl
+        << "bf_size: " << bmp.header.bf_size << "," << std::endl
+        << "bf_reserved1: " << bmp.header.bf_reserved1 << "," << std::endl
+        << "bf_reserved2: " << bmp.header.bf_reserved2 << "," << std::endl
+        << "bf_off_bits: " << bmp.header.bf_off_bits << "," << std::endl
+        << "MAP:" << std::endl
+
+        << "bi_size: " << bmp.map.bi_size << ", " << std::endl
+        << "bi_width: " << bmp.map.bi_width << ", " << std::endl
+        << "bi_height: " << bmp.map.bi_height << ", " << std::endl
+        << "bi_planes: " << bmp.map.bi_planes << ", " << std::endl
+        << "bi_bit_count: " << bmp.map.bi_bit_count << ", " << std::endl
+        << "bi_compression: " << bmp.map.bi_compression << ", " << std::endl
+        << "bi_size_image: " << bmp.map.bi_size_image << ", " << std::endl
+        << "bi_x_pixels_per_meter: " << bmp.map.bi_x_pixels_per_meter << ", " << std::endl
+        << "bi_y_pixels_per_meter: " << bmp.map.bi_y_pixels_per_meter << ", " << std::endl
+        << "bi_colors_used: " << bmp.map.bi_colors_used << ", " << std::endl
+        << "bi_colors_important: " << bmp.map.bi_colors_important << ", " << std::endl;
+
 }

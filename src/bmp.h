@@ -31,21 +31,24 @@ struct tagBITMAPINFOHEADER {
 };
 #pragma pop
 
-typedef struct RGB {
-    uint8_t red;
+struct RGB {
     uint8_t blue;
     uint8_t green;
-} RGB;
+    uint8_t red;
+
+};
 
 struct BMP {
     tagBITMAPFILEHEADER header;
     tagBITMAPINFOHEADER map;
-    std::vector<uint8_t> palette;
-    std::vector<uint8_t> data;
+    std::vector<RGB> palette;
+    std::vector<RGB> data;
 };
 
 BMP load_bmp_image(const std::string& filename);
 
 void save_bmp_image(const BMP& bmp, const std::string& filename);
+
+void print_image_header(const BMP& bmp);
 
 #endif //IMAGE_EDIT_BMP_H
