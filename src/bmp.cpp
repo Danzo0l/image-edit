@@ -7,22 +7,15 @@ BMP load_bmp_image(const std::string& filename) {
         std::cerr << "Error: Unable to open file for reading: " << filename << std::endl;
         exit(1);
     }
-
     file.read(reinterpret_cast<char*>(&bmp.header), sizeof(tagBITMAPFILEHEADER));
     file.read(reinterpret_cast<char*>(&bmp.map), sizeof(tagBITMAPINFOHEADER));
-
     if (bmp.map.bi_bit_count != 24) {
         std::cerr << "Image is not True Color 24 BMP!";
         exit(-1);
     }
-
-    // Calculate image data size
     size_t dataSize = bmp.map.bi_size_image;
-
-    // Read image data directly into the vector
-    bmp.data.resize(dataSize); // Размер вектора устанавливается в соответствии с количеством пикселей
+    bmp.data.resize(dataSize);
     file.read(reinterpret_cast<char*>(bmp.data.data()), dataSize);
-
     file.close();
     return bmp;
 }
@@ -34,13 +27,9 @@ void save_bmp_image(const BMP& bmp, const std::string& filename) {
         std::cerr << "Error: Unable to open file for writing: " << filename << std::endl;
         exit(1);
     }
-
     file.write(reinterpret_cast<const char*>(&bmp.header), sizeof(tagBITMAPFILEHEADER));
     file.write(reinterpret_cast<const char*>(&bmp.map), sizeof(tagBITMAPINFOHEADER));
-
-    // Write image data
     file.write(reinterpret_cast<const char*>(bmp.data.data()), bmp.data.size());
-
     file.close();
 }
 

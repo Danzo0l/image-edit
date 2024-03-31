@@ -78,13 +78,13 @@ void task4b(const std::string& imagePath) {
     };
 
     for (int i = 0; i < 6; ++i) {
-        std::cout << "========= NEXT CHANNEL ========" << std::endl;
+        std::cout << "NEXT_CHANNEL" << std::endl;
         for (int iy = y_start; iy <= y_end; iy+=y_step) {
             for (int ix = x_start; ix <= x_end; ix+=x_step) {
-                std::cout  << std::endl;
                 double corr = bmp_process.autocorrelation(pixel_channels[i], ix, iy);
-                std::cout << "y " << iy <<  "  x " << ix << std::endl;
-                std::cout << "corr " << corr << std::endl;
+                // y <value> x <value> corr <value>
+                std::cout << " " << iy << " " << ix <<
+                        " " << corr << std::endl;
             }
         }
     }

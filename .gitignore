@@ -2,8 +2,10 @@
 
 cmake-build-debug
 build
+venv
 
 *.exe
+*.pyc
 
 .vscode
 .idea
