@@ -5,6 +5,8 @@
 void task3(const std::string& imagePath);
 void task4a(const std::string& imagePath);
 void task4b(const std::string& imagePath);
+void task5(const std::string& imagePath);
+void task6(const std::string& imagePath);
 
 int main(int argc, char* argv[])
 {
@@ -19,6 +21,10 @@ int main(int argc, char* argv[])
         task4a(argv[2]);
     } else if (strcmp(argv[1], "-task4b") == 0) {
         task4b(argv[2]);
+    } else if (strcmp(argv[1], "-task5") == 0) {
+        task5(argv[2]);
+    } else if (strcmp(argv[1], "-task6") == 0) {
+        task6(argv[2]);
     }
 }
 
@@ -49,6 +55,30 @@ void task4a(const std::string& imagePath) {
               "}" << std::endl;
 }
 
-void task4b(const std::string& imagePath) {
+void task5(const std::string& imagePath) {
+    std::string YCbCr_path = imagePath.substr(0, imagePath.size() - 4) + ".ycbcr.bmp";
 
+    BMP bmp_image = load_bmp_image(imagePath);
+    BMPProcess bmp_process = BMPProcess(bmp_image);
+
+    save_bmp_image(bmp_process.RGB24_to_YCbCr(), YCbCr_path);
+
+    std::cout << YCbCr_path << std::endl;
+}
+
+void task6(const std::string& imagePath) {
+    std::string y_Path = imagePath.substr(0, imagePath.size() - 4) + ".Y.bmp";
+    std::string cb_Path = imagePath.substr(0, imagePath.size() - 4) + ".cb.bmp";
+    std::string cr_Path = imagePath.substr(0, imagePath.size() - 4) + ".cr.bmp";
+
+    BMP bmp_image = load_bmp_image(imagePath);
+    BMPProcess bmp_process = BMPProcess(bmp_image);
+
+    save_bmp_image(bmp_process.get_Y_channel(), y_Path);
+    save_bmp_image(bmp_process.get_cb_channel(), cb_Path);
+    save_bmp_image(bmp_process.get_cr_channel(), cr_Path);
+
+    std::cout << y_Path << std::endl;
+    std::cout << cb_Path << std::endl;
+    std::cout << cr_Path << std::endl;
 }

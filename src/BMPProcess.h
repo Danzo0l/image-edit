@@ -19,7 +19,11 @@ public:
     double expected_payoff(char channel);
     double quadr_err(char channel);
     double correlation(char channel1, char channel2);
+
     BMP RGB24_to_YCbCr();
+    BMP get_Y_channel();
+    BMP get_cb_channel();
+    BMP get_cr_channel();
 };
 
 

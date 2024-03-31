@@ -8,4 +8,6 @@ add_executable(image_edit
         src/bmp.h
         src/bmp.cpp
         src/BMPProcess.h
-        src/BMPProcess.cpp)
+        src/rgb.cpp
+        src/correlation.cpp
+        src/ycbcr.cpp)
