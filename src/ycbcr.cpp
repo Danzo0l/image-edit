@@ -27,6 +27,17 @@ BMP BMPProcess::get_Y_channel() {
     return red_channel_bmp;
 }
 
+static inline double pixel_Y(uint8_t r, uint8_t g, uint8_t b) {
+    return (0.299 * r) + (0.587 * b) + (0.114 * g);
+}
+
+static inline double pixel_cb(uint8_t blue, double Y) {
+    return 0.5643 * (blue - Y) + 128;
+}
+
+static inline double pixel_cr(uint8_t red, double Y) {
+    return 0.7132 * (red - Y) + 128;
+}
 
 BMP BMPProcess::RGB24_to_YCbCr()
 {
@@ -36,13 +47,11 @@ BMP BMPProcess::RGB24_to_YCbCr()
 
     for (auto & pixel : bmp.data)
     {
-        double Y = (0.299 * pixel.red) + (0.587 * pixel.blue) + (0.114 * pixel.green);
-        double C_b = 0.5643 * (pixel.blue - Y) + 128;
-        double C_r = 0.7132 * (pixel.red - Y) + 128;
+        double Y = pixel_Y(pixel.red, pixel.green, pixel.blue);
 
         pixel.red = uint8_t(Y);
-        pixel.green = uint8_t(C_b);
-        pixel.blue = uint8_t(C_r);
+        pixel.green = uint8_t(pixel_cb(pixel.blue, Y));
+        pixel.blue = uint8_t(pixel_cr(pixel.red, Y));
     }
 
     return bmp;
@@ -88,4 +97,56 @@ double BMPProcess::PSNR(char channel, const std::string& original_path)
     double PSNR_value = 10 * log10((bmp.map.bi_width * bmp.map.bi_height * pow(2, 24)) / summ);
 
     return PSNR_value;
+}
+
+static std::vector<uint8_t> YCbCr_pixels_channel(std::vector<RGB> &data_rgb, char channel) {
+    int size = data_rgb.size();
+
+    std::vector<uint8_t> a(size);
+
+    for (int i = 0; i < size; ++i) {
+        if (channel == 'Y') {
+            a[i] = data_rgb[i].red;
+        } else if (channel == 'Cb') {
+            a[i] = data_rgb[i].green;
+        } else if (channel == 'b') {
+            a[i] = data_rgb[i].blue;
+        }
+    }
+    return a;
+}
+
+std::vector<uint8_t> BMPProcess::pixels_Y_channel() {
+    size_t size = bmp.data.size();
+    std::vector<uint8_t> a(size);
+
+    for (size_t i = 0; i < size; ++i) {
+        auto &rgb = bmp.data[i];
+        a[i] = (uint8_t) pixel_Y(rgb.red, rgb.green, rgb.blue);
+    }
+    return a;
+}
+
+std::vector<uint8_t> BMPProcess::pixels_cb_channel() {
+    size_t size = bmp.data.size();
+    std::vector<uint8_t> a(size);
+
+    for (size_t i = 0; i < size; ++i) {
+        auto &rgb = bmp.data[i];
+        double y = pixel_Y(rgb.red, rgb.green, rgb.blue);
+        a[i] = (uint8_t) pixel_cb(rgb.blue, y);
+    }
+    return a;
+}
+
+std::vector<uint8_t> BMPProcess::pixels_cr_channel() {
+    size_t size = bmp.data.size();
+    std::vector<uint8_t> a(size);
+
+    for (size_t i = 0; i < size; ++i) {
+        auto &rgb = bmp.data[i];
+        double y = pixel_Y(rgb.red, rgb.green, rgb.blue);
+        a[i] = (uint8_t) pixel_cr(rgb.red, y);
+    }
+    return a;
 }

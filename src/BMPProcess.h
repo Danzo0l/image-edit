@@ -33,6 +33,9 @@ public:
     BMP get_Y_channel();
     BMP get_cb_channel();
     BMP get_cr_channel();
+    std::vector<uint8_t> pixels_Y_channel();
+    std::vector<uint8_t> pixels_cb_channel();
+    std::vector<uint8_t> pixels_cr_channel();
 
     double PSNR(char channel, const std::string& original_path);
 };

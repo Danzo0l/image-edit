@@ -71,14 +71,20 @@ void task4b(const std::string& imagePath) {
     std::vector<uint8_t> pixel_channels[] = {
             bmp_process.pixels_red_channel(),
             bmp_process.pixels_green_channel(),
-            bmp_process.pixels_blue_channel()
+            bmp_process.pixels_blue_channel(),
+            bmp_process.pixels_Y_channel(),
+            bmp_process.pixels_cb_channel(),
+            bmp_process.pixels_cr_channel()
     };
 
-    for (int i = 0; i < 3; ++i) {
+    for (int i = 0; i < 6; ++i) {
+        std::cout << "========= NEXT CHANNEL ========" << std::endl;
         for (int iy = y_start; iy <= y_end; iy+=y_step) {
-            std::map<int, double> result;
             for (int ix = x_start; ix <= x_end; ix+=x_step) {
-                result.insert(std::pair<int, double>(ix, bmp_process.autocorrelation(pixel_channels[i], ix, iy)));
+                std::cout  << std::endl;
+                double corr = bmp_process.autocorrelation(pixel_channels[i], ix, iy);
+                std::cout << "y " << iy <<  "  x " << ix << std::endl;
+                std::cout << "corr " << corr << std::endl;
             }
         }
     }

@@ -38,20 +38,24 @@ double BMPProcess::correlation(const std::vector<uint8_t> &a, const std::vector<
 }
 
 double BMPProcess::autocorrelation(const std::vector<uint8_t>& src, int x, int y) {
-    int32_t H = bmp.map.bi_height;
-    int32_t W = bmp.map.bi_width;
+    int32_t H = bmp.map.bi_height - abs(y);
+    int32_t W = bmp.map.bi_width - abs(x);
+
+    const uint8_t *start = src.data() + (abs(y) * W) + abs(x);
 
     auto a = std::vector<uint8_t>();
     auto b = std::vector<uint8_t>();
 
+
     for (int i = 1; i < H - y; i++){
         for (int j = 1; j < W - x; j++){
-            a.push_back(src[i * W + j]);
+            a.push_back(start[i * W + j]);
         }
     }
+
     for (int m = y + 1; m < H; m++){
         for (int n = x + 1; n < W; n++){
-            b.push_back(src[m * W + n]);
+            b.push_back(start[m * W + n]);
         }
     }
 

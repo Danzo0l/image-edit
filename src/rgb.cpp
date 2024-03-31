@@ -32,21 +32,18 @@ BMP BMPProcess::bmp_red_channel() {
 }
 
 std::vector<uint8_t> RGB_pixels_channel(std::vector<RGB> &data_rgb, char channel) {
-    int step = sizeof(RGB);
-    int size = data_rgb.size() * step;
-    uint8_t *data = reinterpret_cast<uint8_t *>(data_rgb.data());
+    int size = data_rgb.size();
 
     std::vector<uint8_t> a(size);
 
-    int offset = 0;
-    if (channel == 'g') {
-        offset = 1;
-    } else if (channel == 'r') {
-        offset = 2;
-    }
-
-    for (int i = offset; i < size; i+=step) {
-        a[i] = data[i];
+    for (int i = 0; i < size; ++i) {
+        if (channel == 'r') {
+            a[i] = data_rgb[i].red;
+        } else if (channel == 'g') {
+            a[i] = data_rgb[i].green;
+        } else if (channel == 'b') {
+            a[i] = data_rgb[i].blue;
+        }
     }
     return a;
 }
