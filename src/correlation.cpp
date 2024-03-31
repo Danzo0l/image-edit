@@ -1,80 +1,12 @@
 #include "BMPProcess.h"
 
-double BMPProcess::expected_payoff(char channel)
-{
-    double res;
-    res = 1.0 / (bmp.map.bi_width * bmp.map.bi_height);
-    uint32_t summ = 0;
-    for (size_t i = 0; i < bmp.map.bi_height; i++)
-    {
-        uint32_t sum = 0;
-        for (size_t j = 0; j < bmp.map.bi_width; j++)
-        {
-            if (channel == 'r') {
-                sum += bmp.data[i * bmp.map.bi_width + j].red;
-            } else if (channel == 'g') {
-                sum += bmp.data[i * bmp.map.bi_width + j].green;
-            } else if (channel == 'b') {
-                sum += bmp.data[i * bmp.map.bi_width + j].blue;
-            }
-        }
-        summ += sum;
+double BMPProcess::correlation(const std::vector<uint8_t> &a, const std::vector<uint8_t> &b) {
+     size_t size = a.size();
+
+    if (a.size() != b.size()){
+        std::cout << "!! correlation(): a.size() != b.size() !!" << std::endl;
+        size = std::min(a.size(), b.size());
     }
-    res *= summ;
-    return res;
-}
-
-double BMPProcess::quadr_err(char channel)
-{
-    double res;
-    res = 1.0 / ((bmp.map.bi_width * bmp.map.bi_height) - 1);
-    double summ = 0;
-    double expected_payoff_value = expected_payoff(channel);
-
-    for (size_t i = 0; i < bmp.map.bi_height; i++)
-    {
-        double sum = 0;
-        for (size_t j = 0; j < bmp.map.bi_width; j++)
-        {
-            double sum_elem = 0;
-            if (channel == 'r') {
-                sum_elem += bmp.data[i * bmp.map.bi_width + j].red;
-            } else if (channel == 'g') {
-                sum_elem += bmp.data[i * bmp.map.bi_width + j].green;
-            } else if (channel == 'b') {
-                sum_elem += bmp.data[i * bmp.map.bi_width + j].blue;
-            }
-            sum_elem -= expected_payoff_value;
-            sum += expected_payoff_value * expected_payoff_value;
-        }
-        summ += sum;
-    }
-    res *= summ;
-    return sqrt(res);
-}
-
-double BMPProcess::correlation(char channel1, char channel2)
-{
-    int size = bmp.data.size();
-    std::vector<uint8_t> a(size);
-    std::vector<uint8_t> b(size);
-    for (int i = 0; i < size; ++i) {
-        if (channel1 == 'r') {
-            a[i] = bmp.data[i].red;
-        } else if (channel1 == 'g') {
-            a[i] = bmp.data[i].green;
-        } else if (channel1 == 'b') {
-            a[i] = bmp.data[i].blue;
-        }
-        if (channel2 == 'r') {
-            b[i] = bmp.data[i].red;
-        } else if (channel2 == 'g') {
-            b[i] = bmp.data[i].green;
-        } else if (channel2 == 'b') {
-            b[i] = bmp.data[i].blue;
-        }
-    }
-
     // МО
     double m_a = 0, m_b = 0;
     for (int i = 0; i < size; i++){
@@ -103,4 +35,29 @@ double BMPProcess::correlation(char channel1, char channel2)
         std::cout << "!! correlation(): result != [-1; 1] !!" << std::endl;
     }
     return result;
+}
+
+double BMPProcess::autocorrelation(const std::vector<uint8_t>& src, int x, int y) {
+    int32_t H = bmp.map.bi_height - abs(y);
+    int32_t W = bmp.map.bi_width - abs(x);
+
+    const uint8_t *start = src.data() + (abs(y) * W) + abs(x);
+
+    auto a = std::vector<uint8_t>();
+    auto b = std::vector<uint8_t>();
+
+
+    for (int i = 1; i < H - y; i++){
+        for (int j = 1; j < W - x; j++){
+            a.push_back(start[i * W + j]);
+        }
+    }
+
+    for (int m = y + 1; m < H; m++){
+        for (int n = x + 1; n < W; n++){
+            b.push_back(start[m * W + n]);
+        }
+    }
+
+    return correlation(a, b);
 }
