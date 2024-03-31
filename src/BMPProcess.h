@@ -21,9 +21,12 @@ public:
     double correlation(char channel1, char channel2);
 
     BMP RGB24_to_YCbCr();
+    BMP YCbCr_to_RGB24();
     BMP get_Y_channel();
     BMP get_cb_channel();
     BMP get_cr_channel();
+
+    double PSNR(char channel, const std::string& original_path);
 };
 
 

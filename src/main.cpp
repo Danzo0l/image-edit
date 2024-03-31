@@ -4,9 +4,9 @@
 
 void task3(const std::string& imagePath);
 void task4a(const std::string& imagePath);
-void task4b(const std::string& imagePath);
 void task5(const std::string& imagePath);
 void task6(const std::string& imagePath);
+void task7(const std::string& imagePath, const std::string& originalImagePath);
 
 int main(int argc, char* argv[])
 {
@@ -19,12 +19,12 @@ int main(int argc, char* argv[])
         task3(argv[2]);
     } else if (strcmp(argv[1], "-task4a") == 0) {
         task4a(argv[2]);
-    } else if (strcmp(argv[1], "-task4b") == 0) {
-        task4b(argv[2]);
     } else if (strcmp(argv[1], "-task5") == 0) {
         task5(argv[2]);
     } else if (strcmp(argv[1], "-task6") == 0) {
         task6(argv[2]);
+    } else if (strcmp(argv[1], "-task7") == 0) {
+        task7(argv[2], argv[3]);
     }
 }
 
@@ -81,4 +81,18 @@ void task6(const std::string& imagePath) {
     std::cout << y_Path << std::endl;
     std::cout << cb_Path << std::endl;
     std::cout << cr_Path << std::endl;
+}
+
+void task7(const std::string& imagePath, const std::string& originalImagePath) {
+    std::string YCbCr_path = imagePath.substr(0, imagePath.size() - 4) + ".reserved.bmp";
+
+    BMP bmp_image = load_bmp_image(imagePath);
+    BMPProcess bmp_process = BMPProcess(bmp_image);
+
+    save_bmp_image(bmp_process.YCbCr_to_RGB24(), YCbCr_path);
+
+    std::cout << YCbCr_path << std::endl;
+    std::cout << "PSNR &R: " << bmp_process.PSNR('r', originalImagePath) << std::endl;
+    std::cout << "PSNR &G: " << bmp_process.PSNR('g', originalImagePath) << std::endl;
+    std::cout << "PSNR &B: " << bmp_process.PSNR('b', originalImagePath) << std::endl;
 }
