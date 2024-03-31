@@ -33,6 +33,6 @@
     ```
 7. perform reverse format conversion from YCbCr to RGB
     ```shell
-    out -task5 ../kodim10.ycbcr.bmp
+    out -task5 ../kodim10.ycbcr.bmp ../kodim10.bmp
     ```
 
