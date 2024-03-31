@@ -47,3 +47,45 @@ BMP BMPProcess::RGB24_to_YCbCr()
 
     return bmp;
 }
+
+BMP BMPProcess::YCbCr_to_RGB24()
+{
+    BMP YCbCr_image;
+    YCbCr_image.header = bmp.header;
+    YCbCr_image.map = bmp.map;
+
+    for (auto & pixel : bmp.data)
+    {
+        double R = pixel.red - 0.714 * (pixel.blue - 128) - 0.334 * (pixel.green - 128);
+        double G = pixel.red + 1.402 * (pixel.blue - 128);
+        double B = pixel.red + 1.772 * (pixel.green - 128);
+
+        pixel.green = uint8_t(R);
+        pixel.red = uint8_t(G);
+        pixel.blue = uint8_t(B);
+    }
+
+    return bmp;
+}
+
+double BMPProcess::PSNR(char channel, const std::string& original_path)
+{
+    BMP original_image = load_bmp_image(original_path);
+    double summ = 0;
+
+    for (int i = 0; i < bmp.map.bi_height; ++i) {
+        for (int j = 0; j < bmp.map.bi_width; ++j) {
+            if (channel == 'r') {
+                summ += pow((original_image.data[i * bmp.map.bi_width + j].red - bmp.data[i * bmp.map.bi_width + j].red), 2);
+            } else if (channel == 'g') {
+                summ += pow((original_image.data[i * bmp.map.bi_width + j].green - bmp.data[i * bmp.map.bi_width + j].green), 2);
+            } else if (channel == 'b') {
+                summ += pow((original_image.data[i * bmp.map.bi_width + j].blue - bmp.data[i * bmp.map.bi_width + j].blue), 2);
+            }
+
+        }
+    }
+    double PSNR_value = 10 * log10((bmp.map.bi_width * bmp.map.bi_height * pow(2, 24)) / summ);
+
+    return PSNR_value;
+}
