@@ -38,8 +38,8 @@ double BMPProcess::correlation(const std::vector<uint8_t> &a, const std::vector<
 }
 
 double BMPProcess::autocorrelation(const std::vector<uint8_t>& src, int x, int y) {
-    int32_t H = bmp.map.bi_height - abs(y);
-    int32_t W = bmp.map.bi_width - abs(x);
+    int32_t H = bmp.map.bi_height;
+    int32_t W = bmp.map.bi_width;
 
     const uint8_t *start = src.data() + (abs(y) * W) + abs(x);
 

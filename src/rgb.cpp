@@ -59,3 +59,7 @@ std::vector<uint8_t> BMPProcess::pixels_green_channel() {
 std::vector<uint8_t> BMPProcess::pixels_blue_channel() {
     return RGB_pixels_channel(bmp.data, 'b');
 }
+
+void BMPProcess::set_BMP(const BMP& bmpImage) {
+    this->bmp = bmpImage;
+}

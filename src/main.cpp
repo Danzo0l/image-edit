@@ -1,6 +1,7 @@
 #include <cstring>
 #include "bmp.h"
 #include "BMPProcess.h"
+#include "DPCM.h"
 
 void task3(const std::string& imagePath);
 void task4a(const std::string& imagePath);
@@ -97,6 +98,13 @@ void task5(const std::string& imagePath) {
     BMPProcess bmp_process = BMPProcess(bmp_image);
 
     save_bmp_image(bmp_process.RGB24_to_YCbCr(), YCbCr_path);
+    bmp_process.set_BMP(bmp_process.RGB24_to_YCbCr());
+
+    std::cout << "{" << std::endl <<
+              "\t\"Y&Cb\": " << bmp_process.correlation(bmp_process.pixels_red_channel(), bmp_process.pixels_blue_channel()) << "," << std::endl <<
+              "\t\"Y&Cr\": " << bmp_process.correlation(bmp_process.pixels_green_channel(), bmp_process.pixels_blue_channel()) << std::endl <<
+              "\t\"Cb&Cr\": " << bmp_process.correlation(bmp_process.pixels_red_channel(), bmp_process.pixels_green_channel()) << "," << std::endl <<
+              "}" << std::endl;
 
     std::cout << YCbCr_path << std::endl;
 }
@@ -130,4 +138,15 @@ void task7(const std::string& imagePath, const std::string& originalImagePath) {
     std::cout << "PSNR &R: " << bmp_process.PSNR('r', originalImagePath) << std::endl;
     std::cout << "PSNR &G: " << bmp_process.PSNR('g', originalImagePath) << std::endl;
     std::cout << "PSNR &B: " << bmp_process.PSNR('b', originalImagePath) << std::endl;
+}
+
+void task14(const std::string& imagePath) {
+    BMP bmp_image = load_bmp_image(imagePath);
+    BMPProcess bmp_process = BMPProcess(bmp_image);
+
+
+    DPCMforRGB(bmp_image, imagePath + ".DPCM");
+    std::cout << std::endl;
+    DPCMforYCbCr(bmp_process.RGB24_to_YCbCr(), H, W, imagePath + ".DPCM");
+    std::cout << std::endl;
 }

@@ -10,4 +10,9 @@ add_executable(image_edit
         src/BMPProcess.h
         src/rgb.cpp
         src/correlation.cpp
-        src/ycbcr.cpp)
+        src/ycbcr.cpp
+        src/DPCM.cpp
+        src/entropy.cpp
+        src/DPCM.h
+        src/histogram.h
+        src/histogram.cpp)
