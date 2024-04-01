@@ -1,6 +1,6 @@
 #include "DPCM.h"
 
-std::vector<int> DPCMr1(const std::vector<unsigned char>& a, int H, int W, const std::string& outputPath){
+std::vector<int> DPCMr1(const std::vector<uint8_t>& a, int H, int W, const std::string& outputPath){
     std::vector<int> DPCM(H * W, 0);
     for (int i = 0; i < H; i++){
         for (int j = 0; j < W; j++){
@@ -12,9 +12,8 @@ std::vector<int> DPCMr1(const std::vector<unsigned char>& a, int H, int W, const
     for (int i = 0; i < H * W; i++){
         freq[DPCM[i]]++;
     }
-    printHistogram(freq, outputPath);
+//    printHistogram(freq, outputPath);
 
-    freq.clear();
     return DPCM;
 }
 
@@ -30,7 +29,7 @@ std::vector<int> DPCMr2(const std::vector<unsigned char>& a, int H, int W, const
     for (int i = 0; i < H * W; i++){
         freq[DPCM[i]]++;
     }
-    printHistogram(freq, outputPath);
+//    printHistogram(freq, outputPath);
 
     freq.clear();
     return DPCM;
@@ -48,7 +47,7 @@ std::vector<int> DPCMr3(const std::vector<unsigned char>& a, int H, int W, const
     for (int i = 0; i < H * W; i++){
         freq[DPCM[i]]++;
     }
-    printHistogram(freq, outputPath);
+//    printHistogram(freq, outputPath);
 
     freq.clear();
     return DPCM;
@@ -76,11 +75,11 @@ std::vector<int> DPCMr4(const std::vector<unsigned char>& a, int H, int W, const
     return DPCM;
 }
 
-void DPCMforRGB(std::vector<RGB> pixels, int H, int W, const std::string& outputPath){
+void DPCMforRGB(std::vector<RGB> pixels, int32_t H, int32_t W, const std::string& outputPath){
     std::vector<unsigned char> R(H * W, 0);
     std::vector<unsigned char> G(H * W, 0);
     std::vector<unsigned char> B(H * W, 0);
-    for (int i = 0; i < H * W; i++){
+    for (int32_t i = 0; i < H * W; i++){
         R[i] = pixels[i].red;
         G[i] = pixels[i].green;
         B[i] = pixels[i].blue;
@@ -112,28 +111,28 @@ void DPCMforRGB(std::vector<RGB> pixels, int H, int W, const std::string& output
     std::cout << "DPCMr3_B entropy = " << entropy(DPCMr3_B) << std::endl;
     std::vector<int> DPCMr4_B = DPCMr4(B, H, W, outputPath + "DPCMr4_B_freq.txt");
     std::cout << "DPCMr4_B entropy = " << entropy(DPCMr4_B) << std::endl;
-
-    DPCMr1_R.clear();
-    DPCMr2_R.clear();
-    DPCMr3_R.clear();
-    DPCMr4_R.clear();
-
-    DPCMr1_G.clear();
-    DPCMr2_G.clear();
-    DPCMr3_G.clear();
-    DPCMr4_G.clear();
-
-    DPCMr1_B.clear();
-    DPCMr2_B.clear();
-    DPCMr3_B.clear();
-    DPCMr4_B.clear();
-
-    R.clear();
-    B.clear();
-    G.clear();
+//
+//    DPCMr1_R.clear();
+//    DPCMr2_R.clear();
+//    DPCMr3_R.clear();
+//    DPCMr4_R.clear();
+//
+//    DPCMr1_G.clear();
+//    DPCMr2_G.clear();
+//    DPCMr3_G.clear();
+//    DPCMr4_G.clear();
+//
+//    DPCMr1_B.clear();
+//    DPCMr2_B.clear();
+//    DPCMr3_B.clear();
+//    DPCMr4_B.clear();
+//
+//    R.clear();
+//    B.clear();
+//    G.clear();
 }
 
-void DPCMforYCbCr(std::vector<RGB> pixels, int H, int W, const std::string& outputPath){
+void DPCMforYCbCr(std::vector<RGB> pixels, int32_t H, int32_t W, const std::string& outputPath){
     std::vector<unsigned char> Y(H * W, 0);
     std::vector<unsigned char> Cb(H * W, 0);
     std::vector<unsigned char> Cr(H * W, 0);

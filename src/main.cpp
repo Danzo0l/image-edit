@@ -9,6 +9,7 @@ void task4b(const std::string& imagePath);
 void task5(const std::string& imagePath);
 void task6(const std::string& imagePath);
 void task7(const std::string& imagePath, const std::string& originalImagePath);
+void task14(const std::string& imagePath);
 
 int main(int argc, char* argv[])
 {
@@ -29,6 +30,8 @@ int main(int argc, char* argv[])
         task6(argv[2]);
     } else if (strcmp(argv[1], "-task7") == 0) {
         task7(argv[2], argv[3]);
+    } else if (strcmp(argv[1], "-task14") == 0) {
+        task14(argv[2]);
     }
 }
 
@@ -147,6 +150,6 @@ void task14(const std::string& imagePath) {
 
     DPCMforRGB(bmp_image.data, bmp_image.map.bi_height, bmp_image.map.bi_width, imagePath + ".DPCM");
     std::cout << std::endl;
-    DPCMforYCbCr(bmp_process.RGB24_to_YCbCr().data, bmp_image.map.bi_height, bmp_image.map.bi_width, imagePath + ".DPCM");
+//    DPCMforYCbCr(bmp_process.RGB24_to_YCbCr().data, bmp_image.map.bi_height, bmp_image.map.bi_width, imagePath + ".DPCM");
     std::cout << std::endl;
 }
