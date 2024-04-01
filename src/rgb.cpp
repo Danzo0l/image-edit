@@ -3,6 +3,9 @@
 BMPProcess::BMPProcess(const BMP& bmp_data) : bmp(bmp_data) {
     this->bmp = bmp_data;
 }
+BMP BMPProcess::get_BMP() {
+    return bmp;
+}
 
 BMP BMPProcess::bmp_blue_channel() {
     BMP blue_channel_bmp = bmp;

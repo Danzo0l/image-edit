@@ -16,6 +16,7 @@ BMP load_bmp_image(const std::string& filename) {
     size_t dataSize = bmp.map.bi_size_image;
     bmp.data.resize(dataSize);
     file.read(reinterpret_cast<char*>(bmp.data.data()), dataSize);
+
     file.close();
     return bmp;
 }

@@ -24,8 +24,8 @@ public:
     double correlation(const std::vector<uint8_t> &a, const std::vector<uint8_t> &b);
     double autocorrelation(const std::vector<uint8_t>& src, int x, int y);
 
-    BMP RGB24_to_YCbCr();
-    BMP YCbCr_to_RGB24();
+    BMP BMP_RGB24_to_YCbCr();
+    BMP BMP_YCbCr_to_RGB24();
     BMP get_Y_channel();
     BMP get_cb_channel();
     BMP get_cr_channel();
@@ -36,9 +36,13 @@ public:
     double PSNR(char channel, const std::string& original_path);
 
     void set_BMP(const BMP& bmpImage);
+    BMP get_BMP();
 
-    BMP decimation_remove();
-    BMP decimation_average();
+    BMP decimation_remove2();
+    BMP decimation_average2();
+
+    BMP decimation_remove4();
+    BMP decimation_average4();
 
 };
 

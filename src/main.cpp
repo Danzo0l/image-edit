@@ -11,7 +11,7 @@ void task5(const std::string& imagePath);
 void task6(const std::string& imagePath);
 void task7(const std::string& imagePath, const std::string& originalImagePath);
 void task8(const std::string& imagePath);
-void task14(const std::string& imagePath);
+void task14_16(const std::string& imagePath);
 void task17(const std::string& imagePath, uint8_t thr);
 
 int main(int argc, char* argv[])
@@ -35,10 +35,10 @@ int main(int argc, char* argv[])
         task7(argv[2], argv[3]);
     } else if (strcmp(argv[1], "-task8") == 0) {
         task8(argv[2]);
-    } else if (strcmp(argv[1], "-task14") == 0) {
-        task14(argv[2]);
+    } else if (strcmp(argv[1], "-task14_16") == 0) {
+        task14_16(argv[2]);
     } else if (strcmp(argv[1], "-task17") == 0) {
-        task17(argv[2], (uint8_t)strtoul(argv[3], NULL, 0) );
+        task17(argv[2], (uint8_t)strtoul(argv[3], nullptr, 0) );
     }
 }
 
@@ -107,8 +107,8 @@ void task5(const std::string& imagePath) {
     BMP bmp_image = load_bmp_image(imagePath);
     BMPProcess bmp_process = BMPProcess(bmp_image);
 
-    save_bmp_image(bmp_process.RGB24_to_YCbCr(), YCbCr_path);
-    bmp_process.set_BMP(bmp_process.RGB24_to_YCbCr());
+    save_bmp_image(bmp_process.BMP_RGB24_to_YCbCr(), YCbCr_path);
+    bmp_process.set_BMP(bmp_process.BMP_RGB24_to_YCbCr());
 
     std::cout << "{" << std::endl <<
               "\t\"Y&Cb\": " << bmp_process.correlation(bmp_process.pixels_red_channel(), bmp_process.pixels_blue_channel()) << "," << std::endl <<
@@ -142,7 +142,7 @@ void task7(const std::string& imagePath, const std::string& originalImagePath) {
     BMP bmp_image = load_bmp_image(imagePath);
     BMPProcess bmp_process = BMPProcess(bmp_image);
 
-    save_bmp_image(bmp_process.YCbCr_to_RGB24(), YCbCr_path);
+    save_bmp_image(bmp_process.BMP_YCbCr_to_RGB24(), YCbCr_path);
 
     std::cout << YCbCr_path << std::endl;
     std::cout << "PSNR &R: " << bmp_process.PSNR('r', originalImagePath) << std::endl;
@@ -151,24 +151,42 @@ void task7(const std::string& imagePath, const std::string& originalImagePath) {
 }
 
 void task8(const std::string& imagePath) {
-    std::string decimation_remove_path = imagePath.substr(0, imagePath.size() - 4) + ".dec_rm.bmp";
-    std::string decimation_average_path = imagePath.substr(0, imagePath.size() - 4) + ".dec_aver.bmp";
+    std::string path[] = {
+            imagePath.substr(0, imagePath.size() - 4) + ".dec_rm2.bmp",
+            imagePath.substr(0, imagePath.size() - 4) + ".dec_aver2.bmp",
+            imagePath.substr(0, imagePath.size() - 4) + ".dec_rm4.bmp",
+            imagePath.substr(0, imagePath.size() - 4) + ".dec_aver4.bmp",
+    };
 
     BMP bmp_image = load_bmp_image(imagePath);
     BMPProcess bmp_process = BMPProcess(bmp_image);
 
-    save_bmp_image(bmp_process.decimation_remove(), decimation_remove_path);
-    save_bmp_image(bmp_process.decimation_average(), decimation_average_path);
+    BMPProcess bmp_ed_proc[] = {
+            BMPProcess(bmp_process.decimation_remove2()),
+            BMPProcess(bmp_process.decimation_average2()),
+            BMPProcess(bmp_process.decimation_remove4()),
+            BMPProcess(bmp_process.decimation_average4()),
+    };
+
+    for (int i = 0; i < 4; ++i) {
+        std::cout << "path: " << path[i] << std::endl;
+        std::cout << "PSNR &R: " << bmp_ed_proc[i].PSNR('r', imagePath) << std::endl;
+        std::cout << "PSNR &G: " << bmp_ed_proc[i].PSNR('g', imagePath) << std::endl;
+        std::cout << "PSNR &B: " << bmp_ed_proc[i].PSNR('b', imagePath) << std::endl;
+
+        save_bmp_image(bmp_ed_proc[i].get_BMP(), path[i]);
+    }
+
 }
 
-void task14(const std::string& imagePath) {
+void task14_16(const std::string& imagePath) {
     BMP bmp_image = load_bmp_image(imagePath);
     BMPProcess bmp_process = BMPProcess(bmp_image);
 
 
     DPCMforRGB(bmp_image.data, bmp_image.map.bi_width, bmp_image.map.bi_height, imagePath + ".DPCM");
     std::cout << std::endl;
-    DPCMforYCbCr(bmp_process.RGB24_to_YCbCr().data, bmp_image.map.bi_width, bmp_image.map.bi_height, imagePath + ".DPCM");
+    DPCMforYCbCr(bmp_process.BMP_RGB24_to_YCbCr().data, bmp_image.map.bi_width, bmp_image.map.bi_height, imagePath + ".DPCM");
     std::cout << std::endl;
 }
 

@@ -7,7 +7,7 @@
 BMP bi_color_bmp_convert(const BMP& bmp, uint8_t thr)
 {
     BMPProcess bmp_process = BMPProcess(bmp);
-    BMP YCbCr_bmp = bmp_process.RGB24_to_YCbCr();
+    BMP YCbCr_bmp = bmp_process.BMP_RGB24_to_YCbCr();
     for (auto & i : YCbCr_bmp.data)
     {
         if (i.red > thr) {
