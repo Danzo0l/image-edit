@@ -36,6 +36,9 @@ public:
     double PSNR(char channel, const std::string& original_path);
 
     void set_BMP(const BMP& bmpImage);
+
+    BMP decimation_remove();
+    BMP decimation_average();
 };
 
 

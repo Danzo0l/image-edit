@@ -15,4 +15,5 @@ add_executable(image_edit
         src/DPCM.cpp
         src/entropy.cpp
         src/histogram.h
-        src/histogram.cpp)
+        src/histogram.cpp
+        src/transform.cpp)

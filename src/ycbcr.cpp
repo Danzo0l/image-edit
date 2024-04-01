@@ -99,23 +99,6 @@ double BMPProcess::PSNR(char channel, const std::string& original_path)
     return PSNR_value;
 }
 
-static std::vector<uint8_t> YCbCr_pixels_channel(std::vector<RGB> &data_rgb, char channel) {
-    int size = data_rgb.size();
-
-    std::vector<uint8_t> a(size);
-
-    for (int i = 0; i < size; ++i) {
-        if (channel == 'Y') {
-            a[i] = data_rgb[i].red;
-        } else if (channel == 'Cb') {
-            a[i] = data_rgb[i].green;
-        } else if (channel == 'b') {
-            a[i] = data_rgb[i].blue;
-        }
-    }
-    return a;
-}
-
 std::vector<uint8_t> BMPProcess::pixels_Y_channel() {
     size_t size = bmp.data.size();
     std::vector<uint8_t> a(size);
