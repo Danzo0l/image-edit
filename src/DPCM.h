@@ -3,6 +3,9 @@
 
 #include "entropy.h"
 #include "histogram.h"
+#include <vector>
+#include <iostream>
+
 
 std::vector<int> DPCMr1(const std::vector<unsigned char>& a, int H, int W, const std::string& outputPath);
 

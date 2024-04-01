@@ -1,22 +1,5 @@
 #include "histogram.h"
 
-template<class T>
-void printHistogram(std::vector<T> data, const std::string& path){
-    std::ofstream file(path);
-    if (!file.is_open()){
-        std::cout << "file wasn't open!";
-        exit(-1);
-    }
-
-    for (int i = 0; i < data.size(); i++){
-        file << i << "=" << (int) data[i] << std::endl;
-    }
-
-    std::cout << path + " created." << std::endl;
-
-    file.close();
-}
-
 void printRGB(const std::vector<RGB>& a, int H, int W, const std::string& outputPath){
     std::vector<unsigned char> freqR(256, 0);
     std::vector<unsigned char> freqG(256, 0);

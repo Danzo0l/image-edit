@@ -70,47 +70,47 @@ std::vector<int> DPCMr4(const std::vector<unsigned char>& a, int H, int W, const
     for (int i = 0; i < H * W; i++){
         freq[DPCM[i]]++;
     }
-    printHistogram(freq, outputPath);
+//    printHistogram(freq, outputPath);
 
     freq.clear();
     return DPCM;
 }
 
-void DPCMforRGB(const BMP& bmp, const std::string& outputPath){
-    std::vector<unsigned char> R(bmp.map.bi_height * bmp.map.bi_width, 0);
-    std::vector<unsigned char> G(bmp.map.bi_height * bmp.map.bi_width, 0);
-    std::vector<unsigned char> B(bmp.map.bi_height * bmp.map.bi_width, 0);
-    for (int i = 0; i < bmp.map.bi_height * bmp.map.bi_width; i++){
-        R[i] = bmp.data[i].red;
-        G[i] = bmp.data[i].green;
-        B[i] = bmp.data[i].blue;
+void DPCMforRGB(std::vector<RGB> pixels, int H, int W, const std::string& outputPath){
+    std::vector<unsigned char> R(H * W, 0);
+    std::vector<unsigned char> G(H * W, 0);
+    std::vector<unsigned char> B(H * W, 0);
+    for (int i = 0; i < H * W; i++){
+        R[i] = pixels[i].red;
+        G[i] = pixels[i].green;
+        B[i] = pixels[i].blue;
     }
 
-    std::vector<int> DPCMr1_R = DPCMr1(R, outputPath + "DPCMr1_R_freq.txt");
+    std::vector<int> DPCMr1_R = DPCMr1(R, H, W, outputPath + "DPCMr1_R_freq.txt");
     std::cout << "DPCMr1_R entropy = " << entropy(DPCMr1_R) << std::endl;
-    std::vector<int> DPCMr2_R = DPCMr2(R, outputPath + "DPCMr2_R_freq.txt");
+    std::vector<int> DPCMr2_R = DPCMr2(R, H, W, outputPath + "DPCMr2_R_freq.txt");
     std::cout << "DPCMr2_R entropy = " << entropy(DPCMr2_R) << std::endl;
-    std::vector<int> DPCMr3_R = DPCMr3(R, outputPath + "DPCMr3_R_freq.txt");
+    std::vector<int> DPCMr3_R = DPCMr3(R, H, W, outputPath + "DPCMr3_R_freq.txt");
     std::cout << "DPCMr3_R entropy = " << entropy(DPCMr3_R) << std::endl;
-    std::vector<int> DPCMr4_R = DPCMr4(R, outputPath + "DPCMr4_R_freq.txt");
+    std::vector<int> DPCMr4_R = DPCMr4(R, H, W, outputPath + "DPCMr4_R_freq.txt");
     std::cout << "DPCMr4_R entropy = " << entropy(DPCMr4_R) << std::endl;
 
-    std::vector<int> DPCMr1_G = DPCMr1(G, outputPath + "DPCMr1_G_freq.txt");
+    std::vector<int> DPCMr1_G = DPCMr1(G, H, W, outputPath + "DPCMr1_G_freq.txt");
     std::cout << "DPCMr1_G entropy = " << entropy(DPCMr1_G) << std::endl;
-    std::vector<int> DPCMr2_G = DPCMr2(G, outputPath + "DPCMr2_G_freq.txt");
+    std::vector<int> DPCMr2_G = DPCMr2(G, H, W, outputPath + "DPCMr2_G_freq.txt");
     std::cout << "DPCMr2_G entropy = " << entropy(DPCMr2_G) << std::endl;
-    std::vector<int> DPCMr3_G = DPCMr3(G, outputPath + "DPCMr3_G_freq.txt");
+    std::vector<int> DPCMr3_G = DPCMr3(G, H, W, outputPath + "DPCMr3_G_freq.txt");
     std::cout << "DPCMr3_G entropy = " << entropy(DPCMr3_G) << std::endl;
-    std::vector<int> DPCMr4_G = DPCMr4(G, outputPath + "DPCMr4_G_freq.txt");
+    std::vector<int> DPCMr4_G = DPCMr4(G, H, W, outputPath + "DPCMr4_G_freq.txt");
     std::cout << "DPCMr4_G entropy = " << entropy(DPCMr4_G) << std::endl;
 
-    std::vector<int> DPCMr1_B = DPCMr1(B, outputPath + "DPCMr1_B_freq.txt");
+    std::vector<int> DPCMr1_B = DPCMr1(B, H, W, outputPath + "DPCMr1_B_freq.txt");
     std::cout << "DPCMr1_B entropy = " << entropy(DPCMr1_B) << std::endl;
-    std::vector<int> DPCMr2_B = DPCMr2(B, outputPath + "DPCMr2_B_freq.txt");
+    std::vector<int> DPCMr2_B = DPCMr2(B, H, W, outputPath + "DPCMr2_B_freq.txt");
     std::cout << "DPCMr2_B entropy = " << entropy(DPCMr2_B) << std::endl;
-    std::vector<int> DPCMr3_B = DPCMr3(B, outputPath + "DPCMr3_B_freq.txt");
+    std::vector<int> DPCMr3_B = DPCMr3(B, H, W, outputPath + "DPCMr3_B_freq.txt");
     std::cout << "DPCMr3_B entropy = " << entropy(DPCMr3_B) << std::endl;
-    std::vector<int> DPCMr4_B = DPCMr4(B, outputPath + "DPCMr4_B_freq.txt");
+    std::vector<int> DPCMr4_B = DPCMr4(B, H, W, outputPath + "DPCMr4_B_freq.txt");
     std::cout << "DPCMr4_B entropy = " << entropy(DPCMr4_B) << std::endl;
 
     DPCMr1_R.clear();
