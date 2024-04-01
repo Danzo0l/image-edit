@@ -86,6 +86,7 @@ void task4b(const std::string& imagePath) {
                 std::cout << " " << iy << " " << ix <<
                         " " << corr << std::endl;
             }
+            std::cout << "NEXT_Y" << std::endl;
         }
     }
 }

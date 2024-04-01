@@ -3,6 +3,7 @@
 cmake-build-debug
 build
 venv
+.ipynb_checkpoints
 
 *.exe
 *.pyc
