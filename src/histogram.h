@@ -18,8 +18,6 @@ void printHistogram(std::vector<T> data, const std::string& path){
         file << i << "=" << (int) data[i] << std::endl;
     }
 
-    std::cout << path + " created." << std::endl;
-
     file.close();
 }
 

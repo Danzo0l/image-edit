@@ -148,8 +148,8 @@ void task14(const std::string& imagePath) {
     BMPProcess bmp_process = BMPProcess(bmp_image);
 
 
-    DPCMforRGB(bmp_image.data, bmp_image.map.bi_height, bmp_image.map.bi_width, imagePath + ".DPCM");
+    DPCMforRGB(bmp_image.data, bmp_image.map.bi_width, bmp_image.map.bi_height, imagePath + ".DPCM");
     std::cout << std::endl;
-//    DPCMforYCbCr(bmp_process.RGB24_to_YCbCr().data, bmp_image.map.bi_height, bmp_image.map.bi_width, imagePath + ".DPCM");
+    DPCMforYCbCr(bmp_process.RGB24_to_YCbCr().data, bmp_image.map.bi_width, bmp_image.map.bi_height, imagePath + ".DPCM");
     std::cout << std::endl;
 }

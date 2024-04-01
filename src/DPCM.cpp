@@ -29,7 +29,7 @@ std::vector<int> DPCMr2(const std::vector<unsigned char>& a, int H, int W, const
     for (int i = 0; i < H * W; i++){
         freq[DPCM[i]]++;
     }
-//    printHistogram(freq, outputPath);
+    printHistogram(freq, outputPath);
 
     freq.clear();
     return DPCM;
@@ -47,7 +47,7 @@ std::vector<int> DPCMr3(const std::vector<unsigned char>& a, int H, int W, const
     for (int i = 0; i < H * W; i++){
         freq[DPCM[i]]++;
     }
-//    printHistogram(freq, outputPath);
+    printHistogram(freq, outputPath);
 
     freq.clear();
     return DPCM;
@@ -69,7 +69,7 @@ std::vector<int> DPCMr4(const std::vector<unsigned char>& a, int H, int W, const
     for (int i = 0; i < H * W; i++){
         freq[DPCM[i]]++;
     }
-//    printHistogram(freq, outputPath);
+    printHistogram(freq, outputPath);
 
     freq.clear();
     return DPCM;
