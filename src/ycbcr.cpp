@@ -27,19 +27,25 @@ BMP BMPProcess::get_Y_channel() {
     return red_channel_bmp;
 }
 
+uint8_t clipping(double value){
+    if (value < 0) return 0;
+    if (value > UCHAR_MAX) return UCHAR_MAX;
+    return (uint8_t) value;
+}
+
 static inline double pixel_Y(uint8_t r, uint8_t g, uint8_t b) {
-    return (0.299 * r) + (0.587 * b) + (0.114 * g);
+    return clipping((0.299 * r) + (0.587 * g) + (0.114 * b));
 }
 
 static inline double pixel_cb(uint8_t blue, double Y) {
-    return 0.5643 * (blue - Y) + 128;
+    return clipping(0.5643 * (blue - Y) + 128);
 }
 
 static inline double pixel_cr(uint8_t red, double Y) {
-    return 0.7132 * (red - Y) + 128;
+    return clipping(0.7132 * (red - Y) + 128);
 }
 
-BMP BMPProcess::RGB24_to_YCbCr()
+BMP BMPProcess::BMP_RGB24_to_YCbCr()
 {
     BMP YCbCr_image;
     YCbCr_image.header = bmp.header;
@@ -57,20 +63,19 @@ BMP BMPProcess::RGB24_to_YCbCr()
     return bmp;
 }
 
-BMP BMPProcess::YCbCr_to_RGB24()
-{
+BMP BMPProcess::BMP_YCbCr_to_RGB24() {
     BMP YCbCr_image;
     YCbCr_image.header = bmp.header;
     YCbCr_image.map = bmp.map;
 
     for (auto & pixel : bmp.data)
     {
-        double R = pixel.red - 0.714 * (pixel.blue - 128) - 0.334 * (pixel.green - 128);
-        double G = pixel.red + 1.402 * (pixel.blue - 128);
-        double B = pixel.red + 1.772 * (pixel.green - 128);
+        double G = clipping(pixel.red - 0.714 * (pixel.blue - 128) - 0.334 * (pixel.green - 128));
+        double R = clipping(pixel.red + 1.402 * (pixel.blue - 128));
+        double B = clipping(pixel.red + 1.772 * (pixel.green - 128));
 
-        pixel.green = uint8_t(R);
-        pixel.red = uint8_t(G);
+        pixel.red = uint8_t(R);
+        pixel.green = uint8_t(G);
         pixel.blue = uint8_t(B);
     }
 
