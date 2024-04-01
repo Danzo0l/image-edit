@@ -1,6 +1,7 @@
 #include <cstring>
 #include "bmp.h"
 #include "BMPProcess.h"
+#include "bi_color_bmp.h"
 #include "DPCM.h"
 
 void task3(const std::string& imagePath);
@@ -11,6 +12,7 @@ void task6(const std::string& imagePath);
 void task7(const std::string& imagePath, const std::string& originalImagePath);
 void task8(const std::string& imagePath);
 void task14(const std::string& imagePath);
+void task17(const std::string& imagePath, uint8_t thr);
 
 int main(int argc, char* argv[])
 {
@@ -35,6 +37,8 @@ int main(int argc, char* argv[])
         task8(argv[2]);
     } else if (strcmp(argv[1], "-task14") == 0) {
         task14(argv[2]);
+    } else if (strcmp(argv[1], "-task17") == 0) {
+        task17(argv[2], (uint8_t)strtoul(argv[3], NULL, 0) );
     }
 }
 
@@ -166,4 +170,11 @@ void task14(const std::string& imagePath) {
     std::cout << std::endl;
     DPCMforYCbCr(bmp_process.RGB24_to_YCbCr().data, bmp_image.map.bi_width, bmp_image.map.bi_height, imagePath + ".DPCM");
     std::cout << std::endl;
+}
+
+void task17(const std::string& imagePath, uint8_t thr) {
+    std::string res_image_path = imagePath.substr(0, imagePath.size() - 4) + ".bicolor.bmp";
+    BMP bmp_image = load_bmp_image(imagePath);
+    BMP bi_color_image = bi_color_bmp_convert(bmp_image, thr);
+    save_bmp_image(bi_color_image, res_image_path);
 }

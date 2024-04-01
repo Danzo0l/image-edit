@@ -16,4 +16,5 @@ add_executable(image_edit
         src/entropy.cpp
         src/histogram.h
         src/histogram.cpp
-        src/transform.cpp)
+        src/transform.cpp
+        src/bi_color_bmp.h)

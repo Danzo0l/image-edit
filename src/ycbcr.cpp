@@ -133,3 +133,4 @@ std::vector<uint8_t> BMPProcess::pixels_cr_channel() {
     }
     return a;
 }
+

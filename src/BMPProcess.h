@@ -39,6 +39,7 @@ public:
 
     BMP decimation_remove();
     BMP decimation_average();
+
 };
 
 
