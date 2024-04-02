@@ -1,22 +1,11 @@
 #include "BMPProcess.h"
 
-static uint32_t compute_BMP_size(BMP &bmp) {
-    return bmp.data.size();
-}
-
-RGB average(RGB &rgb1, RGB &rgb2, RGB &rgb3, RGB &rgb4) {
-    return {
-            uint8_t ((rgb1.blue + rgb2.blue + rgb3.blue + rgb4.blue) / 4),
-            uint8_t ((rgb1.green + rgb2.green + rgb3.green + rgb4.green) / 4),
-            uint8_t ((rgb1.red + rgb2.red + rgb3.red + rgb4.red) / 4)
-    };
-}
-
 BMP BMPProcess::decimation_remove2() {
     BMP bmp_dec = BMPProcess(bmp).BMP_RGB24_to_YCbCr();
 
     int32_t H = bmp_dec.map.bi_height, W = bmp_dec.map.bi_width;
     auto &data = bmp_dec.data;
+    int32_t size = data.size();
     std::vector<RGB> res = data;
 
     // red - Y, green - Cb, blue - Cr
@@ -25,17 +14,17 @@ BMP BMPProcess::decimation_remove2() {
         for (int j = W - 1; j >= 0; j--){
             // Берем всю нижнюю строчку
             if (i % 2 == 0){
-                res[i * W + j] = data[(i + 1) * W + j];
+                res[(i * W + j) % size] = data[((i + 1) * W + j) % size];
                 res[i].red = data[i].red;
                 continue;
             }
             // Берем слева
             if (j % 2 == 0){
-                res[i * W + j] = data[i * W + j + 1];
+                res[(i * W + j) % size] = data[(i * W + j + 1) % size];
                 res[i].red = data[i].red;
                 continue;
             }
-            res[i * W + j] = data[i * W + j];
+            res[(i * W + j) % size] = data[(i * W + j) % size];
             res[i].red = data[i].red;
         }
     }

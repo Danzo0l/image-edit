@@ -13,9 +13,14 @@ BMP load_bmp_image(const std::string& filename) {
         std::cerr << "Image is not True Color 24 BMP!";
         exit(-1);
     }
+
+    if (bmp.map.bi_size_image == 0) {
+        bmp.map.bi_size_image = bmp.header.bf_size - sizeof(bmp.map) - sizeof(bmp.header);
+    }
+
     size_t dataSize = bmp.map.bi_size_image;
-    bmp.data.resize(dataSize);
-    file.read(reinterpret_cast<char*>(bmp.data.data()), dataSize);
+    bmp.data.resize(dataSize/(sizeof(RGB)) + 1);
+    file.read(reinterpret_cast<char*>(bmp.data.data()),  bmp.map.bi_size_image);
 
     file.close();
     return bmp;
@@ -30,7 +35,7 @@ void save_bmp_image(const BMP& bmp, const std::string& filename) {
     }
     file.write(reinterpret_cast<const char*>(&bmp.header), sizeof(tagBITMAPFILEHEADER));
     file.write(reinterpret_cast<const char*>(&bmp.map), sizeof(tagBITMAPINFOHEADER));
-    file.write(reinterpret_cast<const char*>(bmp.data.data()), bmp.data.size());
+    file.write(reinterpret_cast<const char*>(bmp.data.data()), bmp.map.bi_size_image);
     file.close();
 }
 
