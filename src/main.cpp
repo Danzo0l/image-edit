@@ -54,6 +54,8 @@ void task3(const std::string& imagePath) {
     save_bmp_image(bmp_process.bmp_red_channel(), redPath);
     save_bmp_image(bmp_process.bmp_green_channel(), greenPath);
 
+    std::cout << bmp_image.header.bf_off_bits << std::endl;
+
     std::cout << redPath << std::endl;
     std::cout << greenPath << std::endl;
     std::cout << bluePath << std::endl;
@@ -124,12 +126,16 @@ void task6(const std::string& imagePath) {
     std::string cb_Path = imagePath.substr(0, imagePath.size() - 4) + ".cb.bmp";
     std::string cr_Path = imagePath.substr(0, imagePath.size() - 4) + ".cr.bmp";
 
-    BMP bmp_image = load_bmp_image(imagePath);
-    BMPProcess bmp_process = BMPProcess(bmp_image);
+    BMP bmp_image1 = load_bmp_image(imagePath);
+    BMPProcess bmp_process1 = BMPProcess(bmp_image1);
+    BMP bmp_image2 = load_bmp_image(imagePath);
+    BMPProcess bmp_process2 = BMPProcess(bmp_image2);
+    BMP bmp_image3 = load_bmp_image(imagePath);
+    BMPProcess bmp_process3 = BMPProcess(bmp_image3);
 
-    save_bmp_image(bmp_process.get_Y_channel(), y_Path);
-    save_bmp_image(bmp_process.get_cb_channel(), cb_Path);
-    save_bmp_image(bmp_process.get_cr_channel(), cr_Path);
+    save_bmp_image(bmp_process1.get_Y_channel(), y_Path);
+    save_bmp_image(bmp_process2.get_cb_channel(), cb_Path);
+    save_bmp_image(bmp_process3.get_cr_channel(), cr_Path);
 
     std::cout << y_Path << std::endl;
     std::cout << cb_Path << std::endl;

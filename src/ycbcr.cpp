@@ -1,7 +1,7 @@
 #include "BMPProcess.h"
 
 BMP BMPProcess::get_cr_channel() {
-    BMP blue_channel_bmp = bmp;
+    BMP blue_channel_bmp = copyBMP(bmp);
     for (auto & pixel : blue_channel_bmp.data) {
         pixel.green = pixel.blue;
         pixel.red = pixel.blue;
@@ -10,7 +10,7 @@ BMP BMPProcess::get_cr_channel() {
 }
 
 BMP BMPProcess::get_cb_channel() {
-    BMP green_channel_bmp = bmp;
+    BMP green_channel_bmp = copyBMP(bmp);
     for (auto & pixel : green_channel_bmp.data) {
         pixel.red = pixel.green;
         pixel.blue = pixel.green;
@@ -19,7 +19,7 @@ BMP BMPProcess::get_cb_channel() {
 }
 
 BMP BMPProcess::get_Y_channel() {
-    BMP red_channel_bmp = bmp;
+    BMP red_channel_bmp = copyBMP(bmp);
     for (auto & pixel : red_channel_bmp.data) {
         pixel.green = pixel.red;
         pixel.blue = pixel.red;
@@ -27,7 +27,7 @@ BMP BMPProcess::get_Y_channel() {
     return red_channel_bmp;
 }
 
-uint8_t clipping(double value){
+static uint8_t clipping(double value){
     if (value < 0) return 0;
     if (value > UCHAR_MAX) return UCHAR_MAX;
     return (uint8_t) value;
@@ -45,30 +45,27 @@ static inline double pixel_cr(uint8_t red, double Y) {
     return clipping(0.7132 * (red - Y) + 128);
 }
 
-BMP BMPProcess::BMP_RGB24_to_YCbCr()
-{
-    BMP YCbCr_image;
-    YCbCr_image.header = bmp.header;
-    YCbCr_image.map = bmp.map;
+BMP BMPProcess::BMP_RGB24_to_YCbCr() {
+    BMP YCbCr_image = copyBMP(bmp);
 
-    for (auto & pixel : bmp.data)
+    for (auto & pixel : YCbCr_image.data)
     {
         double Y = pixel_Y(pixel.red, pixel.green, pixel.blue);
+        double Cb = pixel_cb(pixel.blue, Y);
+        double Cr = pixel_cr(pixel.red, Y);
 
         pixel.red = uint8_t(Y);
-        pixel.green = uint8_t(pixel_cb(pixel.blue, Y));
-        pixel.blue = uint8_t(pixel_cr(pixel.red, Y));
+        pixel.green = uint8_t(Cb);
+        pixel.blue = uint8_t(Cr);
     }
 
-    return bmp;
+    return YCbCr_image;
 }
 
 BMP BMPProcess::BMP_YCbCr_to_RGB24() {
-    BMP YCbCr_image;
-    YCbCr_image.header = bmp.header;
-    YCbCr_image.map = bmp.map;
+    BMP YCbCr_image = copyBMP(bmp);
 
-    for (auto & pixel : bmp.data)
+    for (auto & pixel : YCbCr_image.data)
     {
         double G = clipping(pixel.red - 0.714 * (pixel.blue - 128) - 0.334 * (pixel.green - 128));
         double R = clipping(pixel.red + 1.402 * (pixel.blue - 128));
@@ -79,7 +76,7 @@ BMP BMPProcess::BMP_YCbCr_to_RGB24() {
         pixel.blue = uint8_t(B);
     }
 
-    return bmp;
+    return YCbCr_image;
 }
 
 double BMPProcess::PSNR(char channel, const std::string& original_path)

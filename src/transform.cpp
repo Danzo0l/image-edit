@@ -1,5 +1,11 @@
 #include "BMPProcess.h"
 
+static uint8_t clipping(uint32_t value){
+    if (value < 0) return 0;
+    if (value > UCHAR_MAX) return UCHAR_MAX;
+    return (uint8_t) value;
+}
+
 BMP BMPProcess::decimation_remove2() {
     BMP bmp_dec = BMPProcess(bmp).BMP_RGB24_to_YCbCr();
 
@@ -39,25 +45,28 @@ BMP BMPProcess::decimation_average2() {
 
     int32_t H = bmp_dec.map.bi_height, W = bmp_dec.map.bi_width;
     auto &data = bmp_dec.data;
-    std::vector<RGB> res = data;
 
     // red - Y, green - Cb, blue - Cr
 
     for (int i = H - 1; i >= 0; i = i - 2){
         for (int j = W - 1; j >= 0; j = j - 2){
-            uint8_t tmpCb = data[i * W + j].green + data[i * W + j - 1].green + data[(i - 1) * W + j].green + data[(i - 1) * W + j - 1].green;
+            uint32_t tmpCb = data[i * W + j].green + data[i * W + j - 1].green + data[(i - 1) * W + j].green + data[(i - 1) * W + j - 1].green;
             tmpCb /= 4;
-            uint8_t tmpCr = data[i * W + j].blue + data[i * W + j - 1].blue + data[(i - 1) * W + j].blue + data[(i - 1) * W + j - 1].blue;
+            uint32_t tmpCr = data[i * W + j].blue + data[i * W + j - 1].blue + data[(i - 1) * W + j].blue + data[(i - 1) * W + j - 1].blue;
             tmpCr /= 4;
-            RGB pixel = {data[i].red, tmpCb, tmpCr};
-            res[i * W + j] = pixel;
-            res[i * W + j - 1] = pixel;
-            res[(i - 1) * W + j] = pixel;
-            res[(i - 1) * W + j - 1] = pixel;
+            data[i * W + j].green = uint8_t (tmpCb);
+            data[i * W + j].blue = uint8_t (tmpCr);
+
+            data[i * W + j - 1].green = uint8_t (tmpCb);
+            data[i * W + j - 1].blue = uint8_t (tmpCr);
+
+            data[(i - 1) * W + j].green = uint8_t (tmpCb);
+            data[(i - 1) * W + j].blue = uint8_t (tmpCr);
+
+            data[(i - 1) * W + j - 1].green = uint8_t (tmpCb);
+            data[(i - 1) * W + j - 1].blue = uint8_t (tmpCr);
         }
     }
-
-    bmp_dec.data.swap(res);
 
     return BMPProcess(bmp_dec).BMP_YCbCr_to_RGB24();
 
@@ -101,7 +110,6 @@ BMP BMPProcess::decimation_average4() {
 
     int32_t H = bmp_dec.map.bi_height, W = bmp_dec.map.bi_width;
     auto &data = bmp_dec.data;
-    std::vector<RGB> res = data;
 
     // red - Y, green - Cb, blue - Cr
 
@@ -117,16 +125,14 @@ BMP BMPProcess::decimation_average4() {
             }
             tmpCb /= 16;
             tmpCr /= 16;
-            RGB pixel = { data[i * W + j].red, (uint8_t)tmpCb, (uint8_t)tmpCr };
             for (int k = 0; k < 4; k++){
                 for (int l = 0; l < 4; l++){
-                    res[(i + k) * W + (j + l)] = pixel;
+                    data[(i + k) * W + (j + l)].green = uint8_t (tmpCb);
+                    data[(i + k) * W + (j + l)].blue = uint8_t (tmpCr);
                 }
             }
         }
     }
-
-    bmp_dec.data.swap(res);
 
     return BMPProcess(bmp_dec).BMP_YCbCr_to_RGB24();
 }

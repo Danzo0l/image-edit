@@ -50,4 +50,6 @@ void save_bmp_image(const BMP& bmp, const std::string& filename);
 
 void print_image_header(const BMP& bmp);
 
+BMP copyBMP(BMP &bmp);
+
 #endif //IMAGE_EDIT_BMP_H
