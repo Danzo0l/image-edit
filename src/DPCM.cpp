@@ -4,7 +4,7 @@ std::vector<int> DPCMr1(const std::vector<uint8_t>& a, int H, int W, const std::
     std::vector<int> DPCM(H * W, 0);
     for (int i = 0; i < H; i++){
         for (int j = 0; j < W; j++){
-            DPCM[i * W + j] = !((j == 0) || (i == 0)) ? a[i * H + (j - 1)]: a[i * H + j];
+            DPCM[i * W + j] = !((j == 0) || (i == 0)) ? a[i * W + (j - 1)]: a[i * W + j];
         }
     }
 
@@ -12,7 +12,7 @@ std::vector<int> DPCMr1(const std::vector<uint8_t>& a, int H, int W, const std::
     for (int i = 0; i < H * W; i++){
         freq[DPCM[i]]++;
     }
-//    printHistogram(freq, outputPath);
+    printHistogram(freq, outputPath);
 
     return DPCM;
 }
@@ -21,7 +21,7 @@ std::vector<int> DPCMr2(const std::vector<unsigned char>& a, int H, int W, const
     std::vector<int> DPCM(H * W, 0);
     for (int i = 0; i < H; i++){
         for (int j = 0; j < W; j++){
-            DPCM[i * W + j] = !((j == 0) || (i == 0)) ? a[(i - 1) * H + j]: a[i * H + j];
+            DPCM[i * W + j] = !((j == 0) || (i == 0)) ? a[(i - 1) * W + j]: a[i * W + j];
         }
     }
 
@@ -39,7 +39,7 @@ std::vector<int> DPCMr3(const std::vector<unsigned char>& a, int H, int W, const
     std::vector<int> DPCM(H * W, 0);
     for (int i = 0; i < H; i++){
         for (int j = 0; j < W; j++){
-            DPCM[i * W + j] = !((j == 0) || (i == 0)) ? a[(i - 1) * H + (j - 1)]: a[i * H + j];
+            DPCM[i * W + j] = !((j == 0) || (i == 0)) ? a[(i - 1) * W + (j - 1)]: a[i * W + j];
         }
     }
 
@@ -58,9 +58,9 @@ std::vector<int> DPCMr4(const std::vector<unsigned char>& a, int H, int W, const
     for (int i = 0; i < H; i++){
         for (int j = 0; j < W; j++){
             if (((j == 0) || (i == 0))){
-                DPCM[i * W + j] = a[i * H + j];
+                DPCM[i * W + j] = a[i * W + j];
             } else{
-                DPCM[i * W + j] = (a[(i - 1) * H + (j - 1)] + a[(i - 1) * H + j] + a[i * H + (j - 1)]) / 3;
+                DPCM[i * W + j] = (a[(i - 1) * W + (j - 1)] + a[(i - 1) * W + j] + a[i * W + (j - 1)]) / 3;
             }
         }
     }
@@ -76,9 +76,9 @@ std::vector<int> DPCMr4(const std::vector<unsigned char>& a, int H, int W, const
 }
 
 void DPCMforRGB(std::vector<RGB> pixels, int32_t H, int32_t W, const std::string& outputPath){
-    std::vector<unsigned char> R(H * W, 0);
-    std::vector<unsigned char> G(H * W, 0);
-    std::vector<unsigned char> B(H * W, 0);
+    std::vector<uint8_t> R(H * W, 0);
+    std::vector<uint8_t> G(H * W, 0);
+    std::vector<uint8_t> B(H * W, 0);
     for (int32_t i = 0; i < H * W; i++){
         R[i] = pixels[i].red;
         G[i] = pixels[i].green;

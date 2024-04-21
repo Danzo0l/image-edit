@@ -1,11 +1,5 @@
 #include "BMPProcess.h"
 
-static uint8_t clipping(uint32_t value){
-    if (value < 0) return 0;
-    if (value > UCHAR_MAX) return UCHAR_MAX;
-    return (uint8_t) value;
-}
-
 BMP BMPProcess::decimation_remove2() {
     BMP bmp_dec = BMPProcess(bmp).BMP_RGB24_to_YCbCr();
 
